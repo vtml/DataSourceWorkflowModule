@@ -1,5 +1,0 @@
-C:\Projects\DataSourceWorkflowModule\DataSourceWorkflowModule\obj\Debug\DataSourceWorkflowModule.csprojResolveAssemblyReference.cache
-C:\Projects\DataSourceWorkflowModule\DataSourceWorkflowModule\bin\HI.Shared.DataSourceWorkflowModule.dll
-C:\Projects\DataSourceWorkflowModule\DataSourceWorkflowModule\bin\HI.Shared.DataSourceWorkflowModule.pdb
-C:\Projects\DataSourceWorkflowModule\DataSourceWorkflowModule\obj\Debug\HI.Shared.DataSourceWorkflowModule.dll
-C:\Projects\DataSourceWorkflowModule\DataSourceWorkflowModule\obj\Debug\HI.Shared.DataSourceWorkflowModule.pdb
