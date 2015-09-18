@@ -8,7 +8,7 @@ using Sitecore.Workflows;
 namespace HI.Shared.DataSourceWorkflowModule.Models
 {
     public class ItemWorkflowModel
-    {
+    { 
         #region Fields
 
         private Item _contextItem;

@@ -87,7 +87,6 @@
     <Compile Include="Pipeline\GetPageEditorNotifications\GetDataSourceWorkflowNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\ComponentsinFinalWorkflow.cs" />
-    <Compile Include="Validators\MustIncludePTags.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\DataSourceWorkflowModule\Z_EditorDataSourceWorkflowNotifications.config" />
