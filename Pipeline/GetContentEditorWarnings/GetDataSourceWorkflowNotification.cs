@@ -50,6 +50,5 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetContentEditorWarnings
         }
 
         #endregion
-
     }
 }

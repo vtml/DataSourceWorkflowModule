@@ -16,7 +16,6 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
         private IWorkflowProvider _workflowProvider;
         private IWorkflow _workflow;
         private WorkflowState _workflowState;
-        private Item _workflowStateItem;
         WorkflowCommand[] _commands;
         private bool? _showWorkflowNoAccessMessage;
         private const string _showWorkflowNoAccessMessageKey = "DatasourceWorkflowNotification.ShowWorkflowNoAccessMessage";
@@ -61,14 +60,6 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
             get
             {
                 return _workflowState;
-            }
-        }
-
-        public Item WorkflowStateItem
-        {
-            get
-            {
-                return _workflowStateItem;
             }
         }
 
@@ -118,7 +109,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
 
         #endregion
 
-        #region Constrcutor
+        #region Constructor
 
         public ItemWorkflowModel(Item i)
         {
@@ -135,18 +126,15 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
                         if (_workflow != null)
                         {
                             _workflowState = _workflow.GetState(ContextItem);
-                            if (_workflowState != null)
-                            {
-                                using (new SecurityDisabler())
-                                {
-                                    _workflowStateItem = _database.GetItem(_workflowState.StateID);
-                                }
-                            }
                         }
                     }
                 }
             }
         }
+
+        #endregion
+
+        #region Methods
 
         public bool HasWriteAccess()
         {
@@ -160,7 +148,8 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
             string itemDisplayName = string.Format("<span style=\"font-weight:bold;\">{0}</span>", ContextItem.DisplayName);
             if (includeContentEditorLink)
             {
-                itemDisplayName = string.Format("'{0}'", ContextItem.DisplayName); // string.Format("<a href=\"{0}\" target=\"_blank\" style=\"font-weight:bold;\">{1}</a>", ContextItem.GetContentEditorUrl(), ContextItem.Name);
+                itemDisplayName = string.Format("'{0}'", ContextItem.DisplayName); 
+                // itemDisplayName = string.Format("<a href=\"{0}\" target=\"_blank\" style=\"font-weight:bold;\">{1}</a>", ContextItem.GetContentEditorUrl(), ContextItem.Name); // < Sitecore 7.5
             }
             if (!HasWriteAccess())
             {

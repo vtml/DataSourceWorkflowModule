@@ -42,7 +42,6 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetPageEditorNotifications
             {
                 Icon = wfModel.WorkflowState.Icon
             };
-            // editorNotification.Options.Add(new PageEditorNotificationOption("View in Content Editor", ""));
             if (wfModel.HasWriteAccess())
             {
                 foreach (WorkflowCommand command in wfModel.Commands)
@@ -55,6 +54,5 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetPageEditorNotifications
         }
 
         #endregion
-
     }
 }

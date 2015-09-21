@@ -124,17 +124,17 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
             {
                 using (new SecurityDisabler())
                 {
+                    // Less than Sitecore 7.5:
+                    //var mvVariateTestForLang = reference.Settings.GetMultiVariateTestForLanguage(Sitecore.Context.Language);
+
+                    // Sitecore 7.5 to Sitecore 8.0:
                     var mvVariateTestForLang = Sitecore.Analytics.Testing.TestingUtils.TestingUtil.MultiVariateTesting.GetVariableItem(reference);
-                    //For 8.1 and above , please use the use this
+                    
+                    // Sitecore 8.1 and above:
                     //var contentTestStore = new Sitecore.ContentTesting.Data.SitecoreContentTestStore();
-                   // var mvVariateTestForLang = contentTestStore.GetMultivariateTestVariable(reference, reference.Language);
-                    Item variableItem = null;
-
-                    if (mvVariateTestForLang != null)
-                    {
-                        variableItem = mvVariateTestForLang.InnerItem;
-                    }
-
+                    //var mvVariateTestForLang =  contentTestStore.GetMultivariateTestVariable(reference, reference.Language);
+                    
+                    Item variableItem = (mvVariateTestForLang != null) ? mvVariateTestForLang.InnerItem : null;
                     if (variableItem != null)
                     {
                         foreach (Item mvChild in variableItem.Children)
