@@ -91,6 +91,9 @@
   <ItemGroup>
     <Content Include="App_Config\Include\DataSourceWorkflowModule\Z_EditorDataSourceWorkflowNotifications.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Datasource Workflow Module rev 150812-1.zip" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
