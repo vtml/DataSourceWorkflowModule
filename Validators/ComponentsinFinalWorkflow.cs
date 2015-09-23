@@ -45,7 +45,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Validators
                 if (wfModel.NoNulls && !wfModel.WorkflowState.FinalState)
                 {
                     var path = ds.Paths.ContentPath;
-                    Text += GetText("<div>The item in this path <b>\"{0}\"</b> must be in the final workflow state</div>", path);
+                    Text += GetText("The item in this path \"{0}\" must be in a final workflow state.", path);
                     result = GetMaxValidatorResult();
                 }
             }

@@ -124,10 +124,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
             {
                 using (new SecurityDisabler())
                 {
-                    // Less than Sitecore 7.5:
-                    //var mvVariateTestForLang = reference.Settings.GetMultiVariateTestForLanguage(Sitecore.Context.Language);
-
-                    // Sitecore 7.5 to Sitecore 8.0:
+                    // Sitecore 7 to Sitecore 8:
                     var mvVariateTestForLang = Sitecore.Analytics.Testing.TestingUtils.TestingUtil.MultiVariateTesting.GetVariableItem(reference);
                     
                     // Sitecore 8.1 and above:

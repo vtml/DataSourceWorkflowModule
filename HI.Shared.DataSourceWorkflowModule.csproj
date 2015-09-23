@@ -41,27 +41,21 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Sitecore.Analytics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Sitecore.Analytics.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>bin\8.0\Sitecore.Analytics.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.ContentTesting, Version=1.0.0.15022, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Sitecore.ContentTesting.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Sitecore.ContentTesting">
+      <HintPath>bin\8.0\Sitecore.ContentTesting.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.ExperienceEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Sitecore.ExperienceEditor.dll</HintPath>
+    <Reference Include="Sitecore.ExperienceEditor">
+      <HintPath>bin\8.0\Sitecore.ExperienceEditor.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Sitecore.Kernel.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>bin\8.0\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Logging, Version=1.2.0.30715, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Sitecore.Logging.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>bin\8.0\Sitecore.Logging.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -92,7 +86,14 @@
     <Content Include="App_Config\Include\DataSourceWorkflowModule\Z_EditorDataSourceWorkflowNotifications.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Datasource Workflow Module rev 150812-1.zip" />
+    <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Packages\7\Datasource Workflow Module 7.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Packages\8\Datasource Workflow Module 8.zip" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
