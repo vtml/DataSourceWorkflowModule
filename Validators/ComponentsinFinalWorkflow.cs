@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using HI.Shared.DataSourceWorkflowModule.Extensions;
 using HI.Shared.DataSourceWorkflowModule.Models;
@@ -36,7 +37,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Validators
 
         protected override ValidatorResult Evaluate()
         {
-            var item = this.GetItem();
+            var item = GetItem();
             var result = ValidatorResult.Valid;
             var paths = new List<string>();
             foreach (var ds in item.GetAllUniqueDataSourceItems())

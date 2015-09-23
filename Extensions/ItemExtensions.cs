@@ -7,6 +7,7 @@ using Sitecore.Data;
 using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
 using Sitecore.Layouts;
+using Sitecore.Rules.ConditionalRenderings;
 using Sitecore.SecurityModel;
 
 namespace HI.Shared.DataSourceWorkflowModule.Extensions
@@ -17,23 +18,19 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
 
         public static RenderingReference[] GetRenderingReferences(this Item i)
         {
-            if (i == null)
-            {
-                return new RenderingReference[0];
-            }
-            return i.Visualization.GetRenderings(Sitecore.Context.Device, false);
+            return i == null ? new RenderingReference[0] : i.Visualization.GetRenderings(Sitecore.Context.Device, false);
         }
 
         public static List<Item> GetAllUniqueDataSourceItems(this Item i, bool includePersonalizationDataSourceItems = true, bool includeMultiVariateTestDataSourceItems = true)
         {
-            List<Item> list = new List<Item>();
+            var list = new List<Item>();
             foreach (RenderingReference reference in i.GetRenderingReferences())
             {
                 list.AddUnqiueDataSourceItem(reference.GetDataSourceItem());
 
                 if (includePersonalizationDataSourceItems)
                 {
-                    foreach (Item dataSourceItem in reference.GetPersonalizationDataSourceItem())
+                    foreach (var dataSourceItem in reference.GetPersonalizationDataSourceItem())
                     {
                         list.AddUnqiueDataSourceItem(dataSourceItem);
                     }
@@ -75,34 +72,20 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
 
         public static List<Item> GetPersonalizationDataSourceItems(this Item i)
         {
-            List<Item> list = new List<Item>();
-            foreach (RenderingReference reference in i.GetRenderingReferences())
+            var list = new List<Item>();
+            foreach (var reference in i.GetRenderingReferences())
             {
                 list.AddRange(reference.GetPersonalizationDataSourceItem());
             }
             return list;
         }
 
-        private static List<Item> GetPersonalizationDataSourceItem(this RenderingReference reference)
+        private static IEnumerable<Item> GetPersonalizationDataSourceItem(this RenderingReference reference)
         {
-            List<Item> list = new List<Item>();
+            var list = new List<Item>();
             if (reference != null && reference.Settings.Rules != null && reference.Settings.Rules.Count > 0)
             {
-                foreach (var r in reference.Settings.Rules.Rules)
-                {
-                    foreach (var a in r.Actions)
-                    {
-                        var setDataSourceAction = a as Sitecore.Rules.ConditionalRenderings.SetDataSourceAction<Sitecore.Rules.ConditionalRenderings.ConditionalRenderingsRuleContext>;
-                        if (setDataSourceAction != null)
-                        {
-                            Item dataSourceItem = GetDataSourceItem(setDataSourceAction.DataSource, reference.Database);
-                            if (dataSourceItem != null)
-                            {
-                                list.Add(dataSourceItem);
-                            }
-                        }
-                    }
-                }
+                list.AddRange(reference.Settings.Rules.Rules.SelectMany(r => r.Actions).OfType<SetDataSourceAction<ConditionalRenderingsRuleContext>>().Select(setDataSourceAction => GetDataSourceItem(setDataSourceAction.DataSource, reference.Database)).Where(dataSourceItem => dataSourceItem != null));
             }
             return list;
         }
@@ -131,16 +114,14 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
                     //var contentTestStore = new Sitecore.ContentTesting.Data.SitecoreContentTestStore();
                     //var mvVariateTestForLang =  contentTestStore.GetMultivariateTestVariable(reference, reference.Language);
                     
-                    Item variableItem = (mvVariateTestForLang != null) ? mvVariateTestForLang.InnerItem : null;
-                    if (variableItem != null)
+                    var variableItem = (mvVariateTestForLang != null) ? mvVariateTestForLang.InnerItem : null;
+                    if (variableItem == null) return list;
+                    foreach (Item mvChild in variableItem.Children)
                     {
-                        foreach (Item mvChild in variableItem.Children)
+                        var mvDataSourceItem = mvChild.GetInternalLinkFieldItem("Datasource");
+                        if (mvDataSourceItem != null)
                         {
-                            var mvDataSourceItem = mvChild.GetInternalLinkFieldItem("Datasource");
-                            if (mvDataSourceItem != null)
-                            {
-                                list.Add(mvDataSourceItem);
-                            }
+                            list.Add(mvDataSourceItem);
                         }
                     }
                 }
@@ -148,10 +129,10 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
             return list;
         }
 
-        private static bool ListContainsItem(List<Item> list, Item dataSourceItem)
+        private static bool ListContainsItem(IEnumerable<Item> list, Item dataSourceItem)
         {
-            string uniqueID = dataSourceItem.GetUniqueId();
-            return list.Any(e => e.GetUniqueId() == uniqueID);
+            var uniqueId = dataSourceItem.GetUniqueId();
+            return list.Any(e => e.GetUniqueId() == uniqueId);
         }
 
         private static void AddUnqiueDataSourceItem(this List<Item> list, Item dataSourceItem)
@@ -172,7 +153,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
 
         public static string GetContentEditorUrl(this Item i)
         {
-            Uri requestUri = HttpContext.Current.Request.Url;
+            var requestUri = HttpContext.Current.Request.Url;
             return string.Format(ContentEditorUrlFormat, requestUri.Scheme, requestUri.Host, WebUtility.HtmlEncode(i.ID.ToString()), i.Version.Number, i.Language.CultureInfo.Name);
         }
 
@@ -180,13 +161,11 @@ namespace HI.Shared.DataSourceWorkflowModule.Extensions
 
         public static Item GetInternalLinkFieldItem(this Item i, string internalLinkFieldName)
         {
-            if (i != null)
+            if (i == null) return null;
+            InternalLinkField ilf = i.Fields[internalLinkFieldName];
+            if (ilf != null && ilf.TargetItem != null)
             {
-                InternalLinkField ilf = i.Fields[internalLinkFieldName];
-                if (ilf != null && ilf.TargetItem != null)
-                {
-                    return ilf.TargetItem;
-                }
+                return ilf.TargetItem;
             }
             return null;
         }
