@@ -107,6 +107,14 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
             }
         }
 
+        private bool UseHtmlMessaging
+        {
+            get
+            {
+                return Sitecore.Configuration.Settings.GetBoolSetting("DatasourceWorkflowNotification.UseHtmlInMessaging", false);
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -141,23 +149,43 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
             return AuthorizationManager.IsAllowed(ContextItem, AccessRight.ItemWrite, Sitecore.Context.User);
         }
 
-        public string GetEditorDescription(bool includeContentEditorLink = true)
+        public string GetEditorDescription(bool isPageEditor = true)
         {
             string noAccessMessage = string.Empty;
-            string displayName = Workflow.Appearance.DisplayName;
-            string itemDisplayName = string.Format("<span style=\"font-weight:bold;\">{0}</span>", ContextItem.DisplayName);
-            if (includeContentEditorLink)
+            string workflowDisplayName = Workflow.Appearance.DisplayName;
+            string workflowStateDisplayName = WorkflowState.DisplayName;
+            string itemDisplayName = ContextItem.Paths.ContentPath;
+
+            if (UseHtmlMessaging && !isPageEditor)
             {
-                itemDisplayName = string.Format("'{0}'", ContextItem.DisplayName); 
-                // itemDisplayName = string.Format("<a href=\"{0}\" target=\"_blank\" style=\"font-weight:bold;\">{1}</a>", ContextItem.GetContentEditorUrl(), ContextItem.Name); // < Sitecore 7.5
+                workflowDisplayName = BoldValue(workflowDisplayName);
+                workflowStateDisplayName = BoldValue(workflowStateDisplayName);
+                itemDisplayName = BoldValue(itemDisplayName);
             }
+            else
+            {
+                workflowDisplayName = SingleQuoteValue(workflowDisplayName);
+                workflowStateDisplayName = SingleQuoteValue(workflowStateDisplayName);
+                itemDisplayName = SingleQuoteValue(itemDisplayName);
+            }
+
             if (!HasWriteAccess())
             {
                 noAccessMessage = " You cannot change the workflow because do not have write access to this item.";
             }
-            return Translate.Text("The data source item {0} is in the '{1}' state of the '{2}' workflow. {3}", itemDisplayName, WorkflowState.DisplayName, displayName, noAccessMessage);
+
+            return Translate.Text("The data source item {0} is in the {1} state of the {2} workflow.{3}", itemDisplayName, workflowStateDisplayName, workflowDisplayName, noAccessMessage);
         }
 
+        private static string SingleQuoteValue(string value)
+        {
+            return string.Format("'{0}'", value);
+        }
+
+        private static string BoldValue(string value)
+        {
+            return string.Format("<b>{0}</b>", value);
+        }
 
         #endregion
     }
