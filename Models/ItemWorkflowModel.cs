@@ -2,7 +2,6 @@
 using Sitecore.Data.Items;
 using Sitecore.Globalization;
 using Sitecore.Security.AccessControl;
-using Sitecore.SecurityModel;
 using Sitecore.Workflows;
 
 namespace HI.Shared.DataSourceWorkflowModule.Models
@@ -11,14 +10,14 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
     { 
         #region Fields
 
-        private Item _contextItem;
-        private Database _database;
-        private IWorkflowProvider _workflowProvider;
-        private IWorkflow _workflow;
-        private WorkflowState _workflowState;
+        private readonly Item _contextItem;
+        private readonly Database _database;
+        private readonly IWorkflowProvider _workflowProvider;
+        private readonly IWorkflow _workflow;
+        private readonly WorkflowState _workflowState;
         WorkflowCommand[] _commands;
         private bool? _showWorkflowNoAccessMessage;
-        private const string _showWorkflowNoAccessMessageKey = "DatasourceWorkflowNotification.ShowWorkflowNoAccessMessage";
+        private const string ShowWorkflowNoAccessMessageKey = "DatasourceWorkflowNotification.ShowWorkflowNoAccessMessage";
 
         #endregion
 
@@ -85,7 +84,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
             {
                 if (!_showWorkflowNoAccessMessage.HasValue)
                 {
-                    _showWorkflowNoAccessMessage = Sitecore.Configuration.Settings.GetBoolSetting(_showWorkflowNoAccessMessageKey, false);
+                    _showWorkflowNoAccessMessage = Sitecore.Configuration.Settings.GetBoolSetting(ShowWorkflowNoAccessMessageKey, false);
                 }
                 return _showWorkflowNoAccessMessage.Value;
             }
@@ -143,9 +142,9 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
 
         public string GetEditorDescription(bool includeContentEditorLink = true)
         {
-            string noAccessMessage = string.Empty;
-            string displayName = Workflow.Appearance.DisplayName;
-            string itemDisplayName = string.Format("<span style=\"font-weight:bold;\">{0}</span>", ContextItem.DisplayName);
+            var noAccessMessage = string.Empty;
+            var displayName = Workflow.Appearance.DisplayName;
+            var itemDisplayName = string.Format("<span style=\"font-weight:bold;\">{0}</span>", ContextItem.DisplayName);
             if (includeContentEditorLink)
             {
                 itemDisplayName = string.Format("'{0}'", ContextItem.DisplayName); 

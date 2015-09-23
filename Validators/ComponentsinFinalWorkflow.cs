@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using HI.Shared.DataSourceWorkflowModule.Extensions;
 using HI.Shared.DataSourceWorkflowModule.Models;
@@ -34,20 +35,14 @@ namespace HI.Shared.DataSourceWorkflowModule.Validators
 
         protected override ValidatorResult Evaluate()
         {
-            var item = this.GetItem();
+            var item = GetItem();
             var result = ValidatorResult.Valid;
             Text = string.Empty;
 
-            foreach (var ds in item.GetAllUniqueDataSourceItems())
+            foreach (var path in from ds in item.GetAllUniqueDataSourceItems() let wfModel = new ItemWorkflowModel(ds) where wfModel.NoNulls && !wfModel.WorkflowState.FinalState select ds.Paths.ContentPath)
             {
-                var wfModel = new ItemWorkflowModel(ds);
-                
-                if (wfModel.NoNulls && !wfModel.WorkflowState.FinalState)
-                {
-                    var path = ds.Paths.ContentPath;
-                    Text += GetText("The item in this path \"{0}\" must be in a final workflow state.", path);
-                    result = GetMaxValidatorResult();
-                }
+                Text += GetText("The item in this path \"{0}\" must be in a final workflow state.", path);
+                result = GetMaxValidatorResult();
             }
 
             return result;

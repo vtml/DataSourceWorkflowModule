@@ -1,10 +1,10 @@
-﻿using HI.Shared.DataSourceWorkflowModule.Extensions;
+﻿using System.Linq;
+using HI.Shared.DataSourceWorkflowModule.Extensions;
 using HI.Shared.DataSourceWorkflowModule.Models;
-using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Pipelines.GetPageEditorNotifications;
 using Sitecore.Shell.Framework.CommandBuilders;
-using Sitecore.Workflows;
+
 
 namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetPageEditorNotifications
 {
@@ -14,15 +14,12 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetPageEditorNotifications
 
         public override void Process(GetPageEditorNotificationsArgs arguments)
         {
-            Assert.ArgumentNotNull((object)arguments, "arguments");
-            if (arguments.ContextItem != null)
+            Assert.ArgumentNotNull(arguments, "arguments");
+            if (arguments.ContextItem == null) return;
+            foreach (var dataSourceArguments in arguments.ContextItem.GetAllUniqueDataSourceItems().Select(ds => new GetPageEditorNotificationsArgs(ds)))
             {
-                foreach (Item ds in arguments.ContextItem.GetAllUniqueDataSourceItems())
-                {
-                    GetPageEditorNotificationsArgs dataSourceArguments = new GetPageEditorNotificationsArgs(ds);
-                    GetNotifications(dataSourceArguments);
-                    arguments.Notifications.AddRange(dataSourceArguments.Notifications);
-                }
+                GetNotifications(dataSourceArguments);
+                arguments.Notifications.AddRange(dataSourceArguments.Notifications);
             }
         }
 
@@ -38,15 +35,14 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetPageEditorNotifications
 
         private void SetNotification(GetPageEditorNotificationsArgs arguments, ItemWorkflowModel wfModel)
         {
-            PageEditorNotification editorNotification = new PageEditorNotification(wfModel.GetEditorDescription(), PageEditorNotificationType.Warning)
+            var editorNotification = new PageEditorNotification(wfModel.GetEditorDescription(), PageEditorNotificationType.Warning)
             {
                 Icon = wfModel.WorkflowState.Icon
             };
             if (wfModel.HasWriteAccess())
             {
-                foreach (WorkflowCommand command in wfModel.Commands)
+                foreach (var notificationOption in wfModel.Commands.Select(command => new PageEditorNotificationOption(command.DisplayName, new WorkflowCommandBuilder(wfModel.ContextItem, wfModel.Workflow, command).ToString())))
                 {
-                    PageEditorNotificationOption notificationOption = new PageEditorNotificationOption(command.DisplayName, new WorkflowCommandBuilder(wfModel.ContextItem, wfModel.Workflow, command).ToString());
                     editorNotification.Options.Add(notificationOption);
                 }
             }

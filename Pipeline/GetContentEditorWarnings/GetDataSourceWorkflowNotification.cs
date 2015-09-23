@@ -4,7 +4,7 @@ using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Pipelines.GetContentEditorWarnings;
 using Sitecore.Shell.Framework.CommandBuilders;
-using Sitecore.Workflows;
+
 
 namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetContentEditorWarnings
 {
@@ -14,10 +14,10 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetContentEditorWarnings
 
         public void Process(GetContentEditorWarningsArgs arguments)
         {
-            Assert.ArgumentNotNull((object)arguments, "arguments");
+            Assert.ArgumentNotNull(arguments, "arguments");
             if (arguments.Item != null)
             {
-                foreach (Item ds in arguments.Item.GetAllUniqueDataSourceItems())
+                foreach (var ds in arguments.Item.GetAllUniqueDataSourceItems())
                 {
                     GetNotifications(arguments, ds);
                 }
@@ -42,7 +42,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Pipeline.GetContentEditorWarnings
             editorNotification.Icon = wfModel.WorkflowState.Icon;
             if (wfModel.HasWriteAccess())
             {
-                foreach (WorkflowCommand command in wfModel.Commands)
+                foreach (var command in wfModel.Commands)
                 {
                     editorNotification.AddOption(command.DisplayName, new WorkflowCommandBuilder(wfModel.ContextItem, wfModel.Workflow, command).ToString());
                 }
