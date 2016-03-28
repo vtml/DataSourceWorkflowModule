@@ -154,6 +154,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
             string workflowDisplayName = Workflow.Appearance.DisplayName;
             string workflowStateDisplayName = WorkflowState.DisplayName;
             string itemDisplayName = ContextItem.Paths.ContentPath;
+            var itemVersion = ContextItem.Version == null ? 1 : ContextItem.Version.Number;
 
             if (UseHtmlMessaging && !isPageEditor)
             {
@@ -173,7 +174,7 @@ namespace HI.Shared.DataSourceWorkflowModule.Models
                 noAccessMessage = " You cannot change the workflow because do not have write access to this item.";
             }
 
-            return Translate.Text("The data source item {0} is in the {1} state of the {2} workflow.{3}", itemDisplayName, workflowStateDisplayName, workflowDisplayName, noAccessMessage);
+            return Translate.Text("The data source item {0} (Version {4}) is in the {1} state of the {2} workflow.{3}", itemDisplayName, workflowStateDisplayName, workflowDisplayName, noAccessMessage, itemVersion);
         }
 
         private static string SingleQuoteValue(string value)
